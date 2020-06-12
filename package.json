@@ -1,0 +1,47 @@
+{
+  "name": "@nitpik/toolkit",
+  "version": "0.0.0",
+  "description": "A toolkit for building Nitpik formatters",
+  "main": "dist/pkg.cjs.js",
+  "scripts": {
+    "build": "rollup -c",
+    "prepublishOnly": "npm run build",
+    "lint": "eslint src/ tests/",
+    "test": "npm run lint && mocha -r esm tests/ --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nitpik/toolkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nitpick/toolkit/issues"
+  },
+  "homepage": "https://github.com/nitpick/toolkit#readme",
+  "keywords": [
+    "Nitpik",
+    "nitpikplugin",
+    "JavaScript",
+    "Formatter",
+    "Beautifier",
+    "Prettier",
+    "Code Formatter",
+    "Style Guide"
+  ],
+  "author": "Nicholas C. Zakas",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@humanwhocodes/ordered-set": "^0.2.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^5.8.0",
+    "esm": "^3.2.25",
+    "mocha": "^5.2.0",
+    "nyc": "^14.1.1",
+    "rollup": "^1.20.0",
+    "rollup-plugin-babel-minify": "^10.0.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  }
+}
