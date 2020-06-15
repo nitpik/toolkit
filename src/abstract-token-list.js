@@ -33,7 +33,8 @@ export const NEWLINE = /[\r\n]/;
 /** @type TokenListOptions */
 const DEFAULT_OPTIONS = {
     lineEndings: "\n",
-    collapseWhitespace: true
+    collapseWhitespace: true,
+    newLinePattern: NEWLINE
 };
 
 //-----------------------------------------------------------------------------
@@ -46,8 +47,8 @@ const DEFAULT_OPTIONS = {
  * @returns {boolean} True if the character is a non-newline whitespace
  *      character; false if not. 
  */
-function isWhitespace(c) {
-    return WHITESPACE.test(c) && !NEWLINE.test(c);
+function isWhitespace(c, options) {
+    return WHITESPACE.test(c) && !options.newLinePattern.test(c);
 }
 
 function buildTokenList(list, tokens, text, options) {
@@ -59,12 +60,6 @@ function buildTokenList(list, tokens, text, options) {
 
         // next part is a token
         if (token && token.range[0] === index) {
-            // const newToken = {
-            //     type: token.type,
-            //     value: token.value,
-            //     range: token.range
-            // };
-
             list.add(token);
             index = token.range[1];
             tokenIndex++;
@@ -75,7 +70,7 @@ function buildTokenList(list, tokens, text, options) {
         let c = text.charAt(index);
         if (c) {
 
-            if (NEWLINE.test(c)) {
+            if (options.newLinePattern.test(c)) {
 
                 let startIndex = index;
 
@@ -95,11 +90,11 @@ function buildTokenList(list, tokens, text, options) {
                 continue;
             }
 
-            if (isWhitespace(c)) {
+            if (isWhitespace(c, options)) {
                 let startIndex = index;
                 do {
                     index++;
-                } while (isWhitespace(text.charAt(index)));
+                } while (isWhitespace(text.charAt(index), options));
 
                 let value = text.slice(startIndex, index);
 
@@ -163,6 +158,10 @@ export class AbstractTokenList extends OrderedSet {
         }
     }
 
+    static get [Symbol.species]() {
+        return this;
+    }
+
     /**
      * Builds a token list from an array of tokens and the source
      * text of code.
@@ -172,7 +171,7 @@ export class AbstractTokenList extends OrderedSet {
      * @param {TokenListOptions} options The options to apply to the token list. 
      */
     static from({ tokens, text, options }) {
-        const list = new AbstractTokenList();
+        const list = new this[Symbol.species]();
         buildTokenList(list, tokens, text, {
             ...DEFAULT_OPTIONS,
             ...options
@@ -360,7 +359,7 @@ export class AbstractTokenList extends OrderedSet {
     nextToken(startToken) {
         return this.findNext(token => {
             return !this.isWhitespaceOrLineBreak(token) &&
-                !this.isComment(startToken);
+                !this.isComment(token);
         }, startToken);
     }
 

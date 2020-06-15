@@ -7,7 +7,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-import { TokenList } from "../../src/util/token-list.js";
+import { AbstractTokenList } from "../src/abstract-token-list.js";
 import fs from "fs";
 import path from "path";
 import chai from "chai";
@@ -19,20 +19,17 @@ const expect = chai.expect;
 // Helpers
 //-----------------------------------------------------------------------------
 
-function parse(text) {
-    return espree.parse(text, { range: true, tokens: true, comment: true, ecmaVersion: 2019, sourceType:"module" });
-}
 
 //-----------------------------------------------------------------------------
 // Tests
 //-----------------------------------------------------------------------------
 
-describe("TokenList", () => {
+describe("AbstractTokenList", () => {
 
     describe("add()", () => {
 
         it("should add two tokens in a row with next()/previous() links", () => {
-            const tokenList = new TokenList();
+            const tokenList = new AbstractTokenList();
             const token1 = {
                 type: "Foo",
                 range: [0, 5]
@@ -55,7 +52,7 @@ describe("TokenList", () => {
     describe("delete()", () => {
 
         it("should delete token and remove from range maps when called", () => {
-            const tokenList = new TokenList();
+            const tokenList = new AbstractTokenList();
             const token1 = {
                 type: "Foo",
                 range: [0, 5]
@@ -103,13 +100,13 @@ describe("TokenList", () => {
                 }
             ];
 
-            const tokenList = new TokenList(parts);
+            const tokenList = new AbstractTokenList(parts);
             const maybeIndent = tokenList.findPreviousIndent(parts[parts.length - 1]);
             expect(maybeIndent).to.be.undefined;
         });
 
         it("should find no previous indent when token has no indent", () => {
-            const tokenList = new TokenList();
+            const tokenList = new AbstractTokenList();
             const token1 = {
                 type: "Foo",
                 range: [0, 5]
@@ -128,19 +125,23 @@ describe("TokenList", () => {
         });
     });
 
-    describe("fixtures", () => {
-        const tokenListFixturesPath = "./tests/fixtures/token-list";
-        fs.readdirSync(tokenListFixturesPath).forEach(fileName => {
-            
-            const filePath = path.join(tokenListFixturesPath, fileName);
-            const contents = fs.readFileSync(filePath, "utf8").replace(/\r/g, "");
-            const [ options, source, expected ] = contents.trim().split("\n---\n");
-            
-            it(`Test in ${ fileName } should represent tokens correctly`, () => {
-                const ast = parse(source);
-                const tokenList = TokenList.fromAST(ast, source, JSON.parse(options));
-                expect([...tokenList]).to.deep.equal(JSON.parse(expected));
-            });
+    describe("nextToken()", () => {
+        it("should return next non-whitespace, non-comment token when a comment is present", () => {
+            const parts = [
+                { type: "Keyword", value: "const", range: [0, 5] },
+                { type: "Whitespace", value: " ", range: [5, 6] },
+                { type: "Identifier", value: "a", range: [6, 7] },
+                { type: "Punctuator", value: ";", range: [7, 8] },
+
+                { type: "Whitespace", value: " ", range: [8, 9] },
+                { type: "LineComment", value: "//hi", range: [9, 13] },
+                { type: "Identifier", value: "a", range: [13, 14] },
+            ];
+
+            const tokenList = new AbstractTokenList(parts);
+            const next = tokenList.nextToken(parts[3]);
+            expect(next).to.equal(parts[6]);
+
         });
     });
 
