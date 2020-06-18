@@ -7,11 +7,8 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-import { AbstractTokenList } from "../src/abstract-token-list.js";
-import fs from "fs";
-import path from "path";
+import { TokenList } from "../src/token-list.js";
 import chai from "chai";
-import espree from "espree";
 
 const expect = chai.expect;
 
@@ -29,7 +26,7 @@ describe("AbstractTokenList", () => {
     describe("add()", () => {
 
         it("should add two tokens in a row with next()/previous() links", () => {
-            const tokenList = new AbstractTokenList();
+            const tokenList = new TokenList();
             const token1 = {
                 type: "Foo",
                 range: [0, 5]
@@ -52,7 +49,7 @@ describe("AbstractTokenList", () => {
     describe("delete()", () => {
 
         it("should delete token and remove from range maps when called", () => {
-            const tokenList = new AbstractTokenList();
+            const tokenList = new TokenList();
             const token1 = {
                 type: "Foo",
                 range: [0, 5]
@@ -100,13 +97,13 @@ describe("AbstractTokenList", () => {
                 }
             ];
 
-            const tokenList = new AbstractTokenList(parts);
+            const tokenList = new TokenList(parts);
             const maybeIndent = tokenList.findPreviousIndent(parts[parts.length - 1]);
             expect(maybeIndent).to.be.undefined;
         });
 
         it("should find no previous indent when token has no indent", () => {
-            const tokenList = new AbstractTokenList();
+            const tokenList = new TokenList();
             const token1 = {
                 type: "Foo",
                 range: [0, 5]
@@ -138,7 +135,7 @@ describe("AbstractTokenList", () => {
                 { type: "Identifier", value: "a", range: [13, 14] },
             ];
 
-            const tokenList = new AbstractTokenList(parts);
+            const tokenList = new TokenList(parts);
             const next = tokenList.nextToken(parts[3]);
             expect(next).to.equal(parts[6]);
 

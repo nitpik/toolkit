@@ -133,7 +133,7 @@ function buildTokenList(list, tokens, text, options) {
 /**
  * A doubly-linked list representing the parts of source code.
  */
-export class AbstractTokenList extends OrderedSet {
+export class TokenList extends OrderedSet {
 
     /**
      * Creates a new instance.
@@ -393,7 +393,7 @@ export class AbstractTokenList extends OrderedSet {
      */
     previousTokenOrComment(startToken) {
         return this.findPrevious(token => {
-            return !this.isWhitespaceOrLineBreak(token)
+            return !this.isWhitespaceOrLineBreak(token);
         }, startToken);
     }
 

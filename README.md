@@ -32,10 +32,10 @@ Import into your Node.js project:
 
 ```js
 // CommonJS
-const { TokenList } = require("@nitpik/toolkit");
+const { NitpikTokenList } = require("@nitpik/toolkit");
 
 // ESM
-import { TokenList } from "@nitpik/toolkit";
+import { NitpikTokenList } from "@nitpik/toolkit";
 ```
 
 ### Deno
@@ -43,7 +43,7 @@ import { TokenList } from "@nitpik/toolkit";
 Import into your Deno project:
 
 ```js
-import { TokenList } from "https://unpkg.com/@nitpik/toolkit/dist/pkg.js";
+import { NitpikTokenList } from "https://unpkg.com/@nitpik/toolkit/dist/pkg.js";
 ```
 
 ### Browser
@@ -51,10 +51,8 @@ import { TokenList } from "https://unpkg.com/@nitpik/toolkit/dist/pkg.js";
 Import into a browser script:
 
 ```js
-import { TokenList } from "https://unpkg.com/@nitpik/toolkit/dist/pkg.js";
+import { NitpikTokenList } from "https://unpkg.com/@nitpik/toolkit/dist/pkg.js";
 ```
-
-
 
 ### Developer Setup
 

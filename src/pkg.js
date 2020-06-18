@@ -3,4 +3,4 @@
  * @author Nicholas C. Zakas
  */
 
-export { AbstractTokenList } from './abstract-token-list.js';
+export { TokenList as NitpikTokenList } from "./token-list.js";
