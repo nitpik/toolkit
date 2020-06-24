@@ -300,6 +300,30 @@ export class TokenList extends OrderedSet {
         );
     }
 
+    /*eslint-disable no-unused-vars*/
+
+    /**
+     * Determines if a given token indicates that the indent should increase.
+     * @param {Token} token The token to check.
+     * @returns {boolean} True if the token means indentation should increase,
+     *      false if not.
+     */
+    isIndentIncreaser(token) {
+        throw new Error("Not implemented.");
+    }
+
+    /**
+     * Determines if a given token indicates that the indent should decrease.
+     * @param {Token} token The token to check.
+     * @returns {boolean} True if the token means indentation should decrease,
+     *      false if not.
+     */
+    isIndentDecreaser(token) {
+        throw new Error("Not implemented.");
+    }
+
+    /*eslint-enable no-unused-vars*/
+    
     /**
      * Determines if the list is empty.
      * @returns {boolean} True if the list is empty, false if not.
