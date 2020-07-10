@@ -13,7 +13,7 @@ import { TokenList } from "./token-list.js";
 // Private
 //-----------------------------------------------------------------------------
 
-const originalIndents = Symbol("originalIndents");
+const originalComments = Symbol("originalComments");
 
 const INDENT_INCREASE_CHARS = new Set(["{", "[", "("]);
 const INDENT_DECREASE_CHARS = new Set(["}", "]", ")"]);
@@ -37,12 +37,12 @@ export class CStyleTokenList extends TokenList {
         super(iterable);
 
         /**
-         * Keeps track of the original indents for some tokens.
-         * @property originalIndents
+         * Keeps track of the original comment forms.
+         * @property originalComments
          * @type Map
          * @private
          */
-        this[originalIndents] = new Map();
+        this[originalComments] = new Map();
     }
 
     static from({ tokens, text, options }) {
@@ -57,7 +57,10 @@ export class CStyleTokenList extends TokenList {
             if (list.isComment(token)) {
                 const previousToken = list.previous(token);
                 if (list.isIndent(previousToken)) {
-                    list[originalIndents].set(token, previousToken.value);
+                    list[originalComments].set(token, {
+                        value: token.value,
+                        indent: previousToken.value
+                    });
                 }
             }
         }
@@ -66,13 +69,31 @@ export class CStyleTokenList extends TokenList {
     }
 
     /**
-     * Returns the original indent string for a given token.
+     * Returns the original comment value and indent string for a given token.
      * @param {Token} token The token to look up the original indent for. 
      * @returns {string} The indent before the token in the original string or
      *      an empty string if not found.
      */
-    getOriginalCommentIndent(token) {
-        return this[originalIndents].get(token) || "";
+    getOriginalComment(token) {
+        return this[originalComments].get(token) || "";
+    }
+
+    /**
+     * Determines if a given token is a line comment.
+     * @param {Token} part The token to check.
+     * @returns {boolean} True if the token is a line comment, false if not.
+     */
+    isLineComment(part) {
+        return part.type === "LineComment";
+    }
+
+    /**
+     * Determines if a given token is a block comment.
+     * @param {Token} part The token to check.
+     * @returns {boolean} True if the token is a block comment, false if not.
+     */
+    isBlockComment(part) {
+        return part.type === "BlockComment";
     }
 
     /**
